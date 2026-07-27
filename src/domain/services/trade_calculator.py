@@ -1,5 +1,3 @@
-import math
-
 from domain.const import MIN_ORDER_AMOUNT, MIN_TRADE_AMOUNT, QUANTITY_PRECISION
 from domain.models import Order, Stock, Ticker, UserPortfolio
 
@@ -27,8 +25,8 @@ class TradeCalculator:
             current_ratio = target_portfolio[ticker]
             order_amount = (current_ratio * amount) // ratio_sum
             stock_price = stocks[ticker].price
-            quantity = (
-                math.floor((order_amount / stock_price) * QUANTITY_PRECISION) / QUANTITY_PRECISION
-            )
+            quantity = (order_amount * QUANTITY_PRECISION) // stock_price / QUANTITY_PRECISION
+            if quantity == 0:
+                continue
             orders.append(Order(symbol=ticker, amount=order_amount, quantity=quantity))
         return orders

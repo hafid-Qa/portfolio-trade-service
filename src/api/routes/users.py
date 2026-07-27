@@ -30,5 +30,7 @@ def user_trades(
         result = trade_service.create_trade(user_id, trade.amount)
     except PortfolioNotFound as e:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ValueError as e:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 
     return TradeResponse.model_validate(result)

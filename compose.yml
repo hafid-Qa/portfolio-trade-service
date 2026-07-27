@@ -1,0 +1,29 @@
+name: portfolio-api
+
+x-portfolio: &portfolio
+  image: portfolio-api:latest
+  build:
+    context: .
+    dockerfile: Dockerfile
+  environment:
+    PROD: ${PROD:-false}
+  volumes:
+    - ./src:/src:rw
+    - ./data:/data:ro
+
+services:
+  api:
+    <<: *portfolio
+    container_name: portfolio
+    ports:
+      - "${API_EXT_PORT:?Variable not set}:${API_INT_PORT:?Variable not set}"
+
+  test:
+    <<: *portfolio
+    profiles:
+      - test
+    volumes:
+      - ./src:/src
+      - ./tests:/src/tests
+      - ./pyproject.toml:/src/pyproject.toml:ro
+      - ./data:/data:ro

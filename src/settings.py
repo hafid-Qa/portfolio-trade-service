@@ -13,11 +13,17 @@ class Settings(BaseSettings):
 
     @property
     def stock_path(self) -> Path:
-        return self.DATA_DIR / "stocks.yml"
+        path = self.DATA_DIR / "stocks.yml"
+        if not path.is_file():
+            raise ValueError(f"Stocks file not found: {path}")
+        return path
 
     @property
     def portfolio_path(self) -> Path:
-        return self.DATA_DIR / "portfolio.yml"
+        path = self.DATA_DIR / "portfolio.yml"
+        if not path.is_file():
+            raise ValueError(f"Portfolio file not found: {path}")
+        return path
 
     model_config = SettingsConfigDict(env_file=".env")
 

@@ -6,9 +6,18 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    BASE_DIR: DirectoryPath = Path(__file__).parent.parent
     API_NAME: str = "Portfolio API"
     PROD: bool = False
+
+    DATA_DIR: DirectoryPath = Path("/data")
+
+    @property
+    def stock_path(self) -> Path:
+        return self.DATA_DIR / "stocks.yml"
+
+    @property
+    def portfolio_path(self) -> Path:
+        return self.DATA_DIR / "portfolio.yml"
 
     model_config = SettingsConfigDict(env_file=".env")
 
@@ -16,5 +25,3 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
-
-settings = get_settings()

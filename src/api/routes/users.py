@@ -1,7 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
 from pydantic import PositiveInt
 
+from api.deps import TradeServiceDep
 from api.schemas import TradeRequest, TradeResponse
+from domain.exceptions import PortfolioNotFound
 
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -18,11 +20,15 @@ router = APIRouter(prefix="/users", tags=["Users"])
         "are excluded and the remainder is redistributed among the rest."
     ),
 )
-def user_trades(user_id: PositiveInt, trade: TradeRequest) -> TradeResponse:
-    ...
-    # try:
-    #     pass
-    # except HTTPException:
-    #     raise
-    # except Exception as e:
-    #     raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)) from e
+def user_trades(
+    trade_service: TradeServiceDep,
+    user_id: PositiveInt,
+    trade: TradeRequest,
+) -> TradeResponse:
+
+    try:
+        result = trade_service.create_trade(user_id, trade.amount)
+    except PortfolioNotFound as e:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+
+    return TradeResponse.model_validate(result)

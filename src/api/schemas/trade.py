@@ -1,6 +1,6 @@
-from domain.const import MIN_TRADE_AMOUNT
 from pydantic import BaseModel, ConfigDict, Field, PositiveInt
 
+from domain.const import MIN_TRADE_AMOUNT
 from domain.models import Order, Ticker
 
 

@@ -1,11 +1,17 @@
+import logging
 from collections.abc import AsyncGenerator, Callable
 from contextlib import AbstractAsyncContextManager, asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
+from fastapi.responses import JSONResponse
 
 from api.routes import user_router
+from domain.exceptions import UnknownStocksInPortfolio
 from repositories import InMemoryStockRepository, InMemoryUserPortfolioRepository
 from settings import Settings, get_settings
+
+
+logger = logging.getLogger(__name__)
 
 
 LifespanType = Callable[[FastAPI], AbstractAsyncContextManager[None]]
@@ -36,6 +42,15 @@ def create_app(settings: Settings, lifespan: LifespanType | None = None) -> Fast
         return {"message": f"{settings.API_NAME} working"}
 
     app.include_router(user_router)
+
+    @app.exception_handler(UnknownStocksInPortfolio)
+    async def handle_unknown_stocks(
+        request: Request, exc: UnknownStocksInPortfolio
+    ) -> JSONResponse:
+        logger.exception("portfolio references unknown stocks", exc_info=exc)
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"detail": "internal error"}
+        )
 
     return app
 

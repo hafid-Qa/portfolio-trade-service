@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from settings import settings
-
+from api.routes import user_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
@@ -25,3 +25,5 @@ app = FastAPI(
 @app.get("/")
 def read_root():
     return {"message": f"{settings.API_NAME} working"}
+
+app.include_router(user_router)

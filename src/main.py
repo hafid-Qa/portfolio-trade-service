@@ -4,6 +4,7 @@ from contextlib import AbstractAsyncContextManager, asynccontextmanager
 from fastapi import FastAPI
 
 from api.routes import user_router
+from repositories import InMemoryStockRepository, InMemoryUserPortfolioRepository
 from settings import Settings, get_settings
 
 
@@ -13,7 +14,10 @@ LifespanType = Callable[[FastAPI], AbstractAsyncContextManager[None]]
 def make_lifespan(settings: Settings) -> LifespanType:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-        pass
+        app.state.stock_repo = InMemoryStockRepository.from_yaml(settings.stock_path)
+        app.state.portfolio_repo = InMemoryUserPortfolioRepository.from_yaml(
+            settings.portfolio_path
+        )
         yield
 
     return lifespan

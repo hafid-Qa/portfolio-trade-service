@@ -1,0 +1,11 @@
+.DS_Store
+.env
+.venv/
+.worktrees/
+storage/
+__pycache__/
+.pytest_cache/
+*.pyc
+coverage-reports/
+.claude/
+.cursor/

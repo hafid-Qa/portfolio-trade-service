@@ -1,0 +1,51 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "Portfolio-API"
+version = "0.1.0"
+description = "API for the Portfolio"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi[standard]>=0.140.0,<1",
+  "PyYAML>=6.0.3,<7",
+]
+
+[tool.hatch.build.targets.wheel]
+bypass-selection = true
+
+
+[project.optional-dependencies]
+dev = [
+  "coverage[toml]>=7,<8",
+  "httpx>=0.28,<1.0",
+  "ruff>=0.8,<1.0",
+  "pytest>=8.0,<9.0",
+  "pytest-xdist>=3.5",
+  "pytest-asyncio>=0.23,<1.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit"]
+pythonpath = ["src"]
+addopts = "--tb=short -n 3 --dist=loadscope"
+norecursedirs = [".venv", "data","scripts"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "RUF"]
+
+
+[tool.ruff.lint.isort]
+lines-after-imports = 2
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[fastapi.tool]
+entrypoint = "main:app"

@@ -1,6 +1,13 @@
 from typing import Annotated
 
-from pydantic import AfterValidator, BaseModel, ConfigDict, Field, PositiveInt
+from pydantic import (
+    AfterValidator,
+    BaseModel,
+    ConfigDict,
+    Field,
+    PositiveInt,
+    computed_field,
+)
 
 from .types import Ticker, sums_to_100
 
@@ -11,5 +18,10 @@ class UserPortfolio(BaseModel):
         description="target allocation of the portfolio,"
         "where key is the stock ticker and value is the target allocation percentage",
     )
+
+    @computed_field
+    @property
+    def tickers(self) -> list[Ticker]:
+        return list(self.target_portfolio.keys())
 
     model_config = ConfigDict(extra="forbid", from_attributes=True)

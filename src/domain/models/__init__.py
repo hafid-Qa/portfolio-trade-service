@@ -1,6 +1,8 @@
 from .order import Order
 from .stock import Stock
+from .trade_result import TradeResult
 from .types import Ticker, sums_to_100
 from .user_portfolio import UserPortfolio
 
-__all__ = ["Order", "Stock", "Ticker", "UserPortfolio", "sums_to_100"]
+
+__all__ = ["Order", "Stock", "Ticker", "TradeResult", "UserPortfolio", "sums_to_100"]

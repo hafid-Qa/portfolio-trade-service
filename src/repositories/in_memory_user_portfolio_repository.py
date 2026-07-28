@@ -2,10 +2,11 @@ from pathlib import Path
 from typing import Any
 
 from domain.models import UserPortfolio
+from domain.repositories import UserPortfolioRepository
 from yaml_io import read_yaml
 
 
-class InMemoryUserPortfolioRepository:
+class InMemoryUserPortfolioRepository(UserPortfolioRepository):
     def __init__(self, portfolios: list[UserPortfolio]) -> None:
         self._portfolios: dict[int, UserPortfolio] = {
             portfolio.user_id: portfolio for portfolio in portfolios

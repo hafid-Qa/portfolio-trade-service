@@ -10,3 +10,6 @@ coverage-reports/
 .claude/
 .cursor/
 **/src/pyproject.toml
+**/src/coverage.xml
+**/src/report.xml
+**/src/.coverage

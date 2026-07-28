@@ -79,4 +79,4 @@ class TestUserTrades:
     def test_rejects_amount_below_minimum_trade_amount(self, client: TestClient) -> None:
         res = client.post("/users/1/trades", json={"amount": 500})
 
-        assert res.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+        assert res.status_code == status.HTTP_422_UNPROCESSABLE_CONTENT

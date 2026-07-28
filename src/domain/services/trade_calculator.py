@@ -36,7 +36,7 @@ class TradeCalculator:
             exclusion, in `portfolio.target_portfolio` iteration order.
 
         Raises:
-            ValueError: If `amount` is below `MIN_TRADE_AMOUNT`.
+            TradeAmountBelowMinimum: If `amount` is below `MIN_TRADE_AMOUNT`.
         """
         if amount < MIN_TRADE_AMOUNT:
             raise TradeAmountBelowMinimum(amount, MIN_TRADE_AMOUNT)

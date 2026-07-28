@@ -51,6 +51,3 @@ lines-after-imports = 2
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
-
-[fastapi.tool]
-entrypoint = "main:app"

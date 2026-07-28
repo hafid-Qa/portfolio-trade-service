@@ -1,6 +1,7 @@
 import pytest
 
 from domain.const import MIN_TRADE_AMOUNT
+from domain.exceptions import TradeAmountBelowMinimum
 from domain.models import Stock, Ticker, UserPortfolio
 from domain.services import TradeCalculator
 
@@ -77,7 +78,7 @@ class TestTradeCalculator:
     ) -> None:
         portfolio = UserPortfolio(user_id=1, target_portfolio={"A": 100})
 
-        with pytest.raises(ValueError, match=str(MIN_TRADE_AMOUNT)):
+        with pytest.raises(TradeAmountBelowMinimum, match=str(MIN_TRADE_AMOUNT)):
             calculator.calculate(
                 portfolio=portfolio,
                 stocks=stocks_map,

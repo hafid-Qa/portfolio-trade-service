@@ -1,4 +1,5 @@
 from domain.const import MIN_ORDER_AMOUNT, MIN_TRADE_AMOUNT, QUANTITY_PRECISION
+from domain.exceptions import TradeAmountBelowMinimum
 from domain.models import Order, Stock, Ticker, UserPortfolio
 
 
@@ -38,7 +39,7 @@ class TradeCalculator:
             ValueError: If `amount` is below `MIN_TRADE_AMOUNT`.
         """
         if amount < MIN_TRADE_AMOUNT:
-            raise ValueError(f"Trade amount {amount} is below the minimum of {MIN_TRADE_AMOUNT}")
+            raise TradeAmountBelowMinimum(amount, MIN_TRADE_AMOUNT)
 
         valid_tickers: list[Ticker] = []
         ratio_sum: int = 0

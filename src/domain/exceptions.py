@@ -8,3 +8,9 @@ class UnknownStocksInPortfolio(Exception):
     def __init__(self, tickers: list[str]) -> None:
         self.tickers = tickers
         super().__init__(f"Stocks not found in catalogue: {', '.join(tickers)}")
+
+
+class TradeAmountBelowMinimum(Exception):
+    def __init__(self, amount: int, min_amount: int) -> None:
+        self.min_amount = min_amount
+        super().__init__(f"Trade amount {amount} is below the minimum of {min_amount}")

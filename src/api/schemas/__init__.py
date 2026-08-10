@@ -1,4 +1,4 @@
-from .trade import TradeRequest, TradeResponse
+from .trade import OrderResponse, TradeRequest, TradeResponse
 
 
-__all__ = ["TradeRequest", "TradeResponse"]
+__all__ = ["OrderResponse", "TradeRequest", "TradeResponse"]

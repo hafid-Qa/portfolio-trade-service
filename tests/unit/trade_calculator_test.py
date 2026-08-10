@@ -25,8 +25,8 @@ class TestTradeCalculator:
         orders = calculator.calculate(portfolio=portfolio, stocks=stocks_map, amount=10000)
 
         assert [order.model_dump() for order in orders] == [
-            {"symbol": "A", "amount": 4000, "quantity": 4.0},
-            {"symbol": "B", "amount": 6000, "quantity": 38.709},
+            {"symbol": "A", "amount": 4000, "quantity_units": 4000},
+            {"symbol": "B", "amount": 6000, "quantity_units": 38709},
         ]
 
     def test_excludes_untradable_symbol(
@@ -46,8 +46,8 @@ class TestTradeCalculator:
         orders = calculator.calculate(portfolio=portfolio, stocks=stocks_map, amount=10000)
 
         assert [order.model_dump() for order in orders] == [
-            {"symbol": "A", "amount": 4366, "quantity": 4.366},
-            {"symbol": "B", "amount": 5633, "quantity": 36.341},
+            {"symbol": "A", "amount": 4366, "quantity_units": 4366},
+            {"symbol": "B", "amount": 5633, "quantity_units": 36341},
         ]
 
     def test_excludes_below_minimum_order_amount_and_reapportions(
@@ -58,11 +58,11 @@ class TestTradeCalculator:
         orders = calculator.calculate(portfolio=portfolio, stocks=stocks_map, amount=1000)
 
         assert [order.model_dump() for order in orders] == [
-            {"symbol": "B", "amount": 505, "quantity": 3.258},
-            {"symbol": "C", "amount": 494, "quantity": 0.222},
+            {"symbol": "B", "amount": 505, "quantity_units": 3258},
+            {"symbol": "C", "amount": 494, "quantity_units": 222},
         ]
 
-    def test_excludes_order_that_floors_to_zero_quantity(
+    def test_reapportions_after_excluding_order_that_floors_to_zero_quantity(
         self, calculator: TradeCalculator, stocks_map: dict[Ticker, Stock]
     ) -> None:
         portfolio = UserPortfolio(user_id=5, target_portfolio={"A": 98, "X": 2})
@@ -70,7 +70,7 @@ class TestTradeCalculator:
         orders = calculator.calculate(portfolio=portfolio, stocks=stocks_map, amount=10000)
 
         assert [order.model_dump() for order in orders] == [
-            {"symbol": "A", "amount": 9800, "quantity": 9.8},
+            {"symbol": "A", "amount": 10000, "quantity_units": 10000},
         ]
 
     def test_raises_for_amount_below_minimum_trade_amount(

@@ -7,8 +7,10 @@ from fastapi.responses import JSONResponse
 
 from api.routes import user_router
 from domain.exceptions import UnknownStocksInPortfolio
+from domain.models import Stock, UserPortfolio
 from repositories import InMemoryStockRepository, InMemoryUserPortfolioRepository
 from settings import Settings, get_settings
+from yaml_io import read_yaml
 
 
 logger = logging.getLogger(__name__)
@@ -20,10 +22,19 @@ LifespanType = Callable[[FastAPI], AbstractAsyncContextManager[None]]
 def make_lifespan(settings: Settings) -> LifespanType:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-        app.state.stock_repo = InMemoryStockRepository.from_yaml(settings.stock_path)
-        app.state.portfolio_repo = InMemoryUserPortfolioRepository.from_yaml(
-            settings.portfolio_path
-        )
+        stocks = [Stock.model_validate(item) for item in read_yaml(settings.stock_path)]
+        portfolios = [
+            UserPortfolio.model_validate(item) for item in read_yaml(settings.portfolio_path)
+        ]
+
+        known_tickers = {stock.ticker for stock in stocks}
+        dangling = {ticker for portfolio in portfolios for ticker in portfolio.tickers}
+        dangling -= known_tickers
+        if dangling:
+            raise RuntimeError(f"portfolios reference unknown tickers: {sorted(dangling)}")
+
+        app.state.stock_repo = InMemoryStockRepository(stocks)
+        app.state.portfolio_repo = InMemoryUserPortfolioRepository(portfolios)
         yield
 
     return lifespan

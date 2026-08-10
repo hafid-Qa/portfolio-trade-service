@@ -15,8 +15,8 @@ class TestUserTrades:
             "amount": 10000,
             "target_portfolio": {"A": 40, "B": 60},
             "orders": [
-                {"symbol": "A", "amount": 4000, "quantity": 4.0},
-                {"symbol": "B", "amount": 6000, "quantity": 38.709},
+                {"symbol": "A", "amount": 4000, "quantity": "4.000"},
+                {"symbol": "B", "amount": 6000, "quantity": "38.709"},
             ],
         }
 
@@ -40,8 +40,8 @@ class TestUserTrades:
         assert TradeResponse.model_validate(payload)
         assert payload["target_portfolio"] == {"A": 31, "B": 40, "E": 29}
         assert payload["orders"] == [
-            {"symbol": "A", "amount": 4366, "quantity": 4.366},
-            {"symbol": "B", "amount": 5633, "quantity": 36.341},
+            {"symbol": "A", "amount": 4366, "quantity": "4.366"},
+            {"symbol": "B", "amount": 5633, "quantity": "36.341"},
         ]
 
     def test_excludes_below_minimum_order_amount_and_reapportions(self, client: TestClient) -> None:
@@ -52,18 +52,20 @@ class TestUserTrades:
         assert TradeResponse.model_validate(payload)
         assert payload["target_portfolio"] == {"B": 50, "C": 49, "D": 1}
         assert payload["orders"] == [
-            {"symbol": "B", "amount": 505, "quantity": 3.258},
-            {"symbol": "C", "amount": 494, "quantity": 0.222},
+            {"symbol": "B", "amount": 505, "quantity": "3.258"},
+            {"symbol": "C", "amount": 494, "quantity": "0.222"},
         ]
 
-    def test_excludes_order_that_floors_to_zero_quantity(self, client_with: TestClient) -> None:
+    def test_reapportions_after_excluding_order_that_floors_to_zero_quantity(
+        self, client_with: TestClient
+    ) -> None:
         res = client_with.post("/users/5/trades", json={"amount": 10000})
 
         assert res.status_code == status.HTTP_200_OK
         payload = res.json()
         assert TradeResponse.model_validate(payload)
         assert payload["target_portfolio"] == {"A": 98, "X": 2}
-        assert payload["orders"] == [{"symbol": "A", "amount": 9800, "quantity": 9.8}]
+        assert payload["orders"] == [{"symbol": "A", "amount": 10000, "quantity": "10.000"}]
 
     def test_errors_when_portfolio_references_unknown_stock(self, client_with: TestClient) -> None:
         res = client_with.post("/users/6/trades", json={"amount": 10000})

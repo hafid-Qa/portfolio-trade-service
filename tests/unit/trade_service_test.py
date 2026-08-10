@@ -33,8 +33,8 @@ class TestTradeService:
         assert result.amount == 10000
         assert result.target_portfolio == {"A": 40, "B": 60}
         assert [order.model_dump() for order in result.orders] == [
-            {"symbol": "A", "amount": 4000, "quantity": 4.0},
-            {"symbol": "B", "amount": 6000, "quantity": 38.709},
+            {"symbol": "A", "amount": 4000, "quantity_units": 4000},
+            {"symbol": "B", "amount": 6000, "quantity_units": 38709},
         ]
 
     def test_reapportions_after_excluding_below_minimum_order_amount(
@@ -44,8 +44,8 @@ class TestTradeService:
 
         assert result.target_portfolio == {"B": 50, "C": 49, "D": 1}
         assert [order.model_dump() for order in result.orders] == [
-            {"symbol": "B", "amount": 505, "quantity": 3.258},
-            {"symbol": "C", "amount": 494, "quantity": 0.222},
+            {"symbol": "B", "amount": 505, "quantity_units": 3258},
+            {"symbol": "C", "amount": 494, "quantity_units": 222},
         ]
 
     def test_raises_for_unknown_user(self, service: TradeService) -> None:

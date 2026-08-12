@@ -55,10 +55,8 @@ class TradeCalculator:
 
         weights: dict[Ticker, PositiveInt] = portfolio.target_portfolio
 
-        eligible: list[Ticker] = [
-            t for t in weights if t in stocks and stocks[t].tradable
-        ]
-
+        eligible: list[Ticker] = [t for t in weights if t in stocks and stocks[t].tradable]
+        ratio_sum = 0
         while eligible:
             ratio_sum = sum(weights[t] for t in eligible)
             survivors: list[Ticker] = [
@@ -73,7 +71,6 @@ class TradeCalculator:
         if not eligible:
             return []
 
-        ratio_sum = sum(weights[t] for t in eligible)
         return [
             Order(
                 symbol=ticker,

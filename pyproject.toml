@@ -31,13 +31,14 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
-addopts = "--tb=short -n 3 --dist=loadscope --cov=. --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=report.xml  --durations=25"
+addopts = "--tb=short -n 3 --dist=loadscope --cov=. --cov-report=term-missing --cov-report=xml:/tmp/coverage.xml --junitxml=/tmp/report.xml  --durations=25"
 norecursedirs = [".venv", "data","scripts"]
 asyncio_mode = "auto"
 
 [tool.coverage.run]
 source = ["."]
 omit = ["tests/*"]
+data_file = "/tmp/.coverage"
 
 [tool.ruff]
 line-length = 100

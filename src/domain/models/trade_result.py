@@ -1,7 +1,7 @@
 from pydantic import BaseModel, ConfigDict, PositiveInt
 
 from .order import Order
-from .types import Ticker
+from .ticker import Ticker
 
 
 class TradeResult(BaseModel):

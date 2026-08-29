@@ -2,8 +2,9 @@ from typing import Annotated
 
 from fastapi import Depends, Request
 
+from application import TradeService
 from domain.repositories import StockRepository, UserPortfolioRepository
-from domain.services import TradeCalculator, TradeService
+from domain.services import TradeCalculator
 from settings import Settings, get_settings
 
 

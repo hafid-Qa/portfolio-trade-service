@@ -1,9 +1,10 @@
 import pytest
 
+from application import TradeService
 from domain.exceptions import PortfolioNotFound, UnknownStocksInPortfolio
 from domain.models import TradeResult
 from domain.repositories import StockRepository, UserPortfolioRepository
-from domain.services import TradeCalculator, TradeService
+from domain.services import TradeCalculator
 
 
 @pytest.fixture

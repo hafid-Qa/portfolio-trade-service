@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field, PositiveInt
 
-from .types import Ticker
+from .ticker import Ticker
 
 
 class Order(BaseModel):
